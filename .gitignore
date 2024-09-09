@@ -1,0 +1,8 @@
+# Ignore entire node_modules directory
+node_modules/
+
+# Ignore specific file from node_modules
+node_modules/some-package/file-to-ignore.js
+
+# Ignore specific folder from node_modules
+node_modules/some-package/some-folder/
