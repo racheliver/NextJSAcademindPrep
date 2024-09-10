@@ -1,25 +1,47 @@
+import { useState } from 'react';
 import classes from './NewPost.module.css';
 
 function NewPost(props) {
-  const changeNameHandler = (e) => {
-      props.onChangeNameHandler(props.id,e.target.value)
-  }
+  const [inputName, setInputName] = useState(props.name || '');
+  const [inputBody, setInputBody] = useState(props.body || '');
 
-  const changeBodyHandler = (e) => {
-    props.onChangeBodyHandler(props.id,e.target.value)
-}
+  const changeInfo = (e) => {
+    e.preventDefault();
+    props.onChangeNameHandler(props.id,inputName);
+    props.onChangeBodyHandler(props.id,inputBody);
+
+    props.onClose();
+  };
+
   return (
     <form className={classes.form}>
       <p>
-        <label htmlFor="body">Text</label>
-        <textarea onChange={changeBodyHandler} id={props.id} required rows={3} />
+        <label htmlFor={props.id}>Text</label>
+        <textarea
+          onChange={(e) => setInputBody(e.target.value)} 
+          id={props.id}
+          required
+          rows={3}
+          value={inputBody}  
+        />
       </p>
       <p>
-        <label htmlFor="name">Your name</label>
-        <input onChange={changeNameHandler} type="text" id={props.id} required />
+        <label htmlFor={props.id}>Your name</label>
+        <input
+          value={inputName}  
+          onChange={(e) => setInputName(e.target.value)} 
+          type="text"
+          id={props.id}
+          required
+        />
+      </p>
+      <p className={classes.actions}>
+        <button type="button" onClick={props.onClose}>Cancel</button>
+        <button id={props.id} onClick={changeInfo}>Submit</button>
       </p>
     </form>
   );
 }
+
 
 export default NewPost;

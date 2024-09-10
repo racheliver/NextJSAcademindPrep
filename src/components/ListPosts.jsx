@@ -18,6 +18,7 @@ export const ListPosts = (props) => {
                     id={post.id}
                     onChangeNameHandler={props.onChangeNameHandler}
                     onChangeBodyHandler={props.onChangeBodyHandler}
+                    onClose={props.onCloseModal}
                   />
                 </Modal>
               )}
