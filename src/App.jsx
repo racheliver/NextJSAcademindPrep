@@ -1,57 +1,42 @@
-import { ListPosts } from "./components/ListPosts";
 import React, { useState } from "react";
+import { ListPosts } from "./components/ListPosts";
 import MainHeader from "./components/MainHeader";
 
-export const POSTINFO = [
-  {
-    author: "racheli",
-    body: "body1",
-    id: 1,
-  },
-  { author: "max", body: "body2", id: 2 },
+const INITIAL_POSTS = [
+  { id: "1", author: "racheli", body: "body1" },
+  { id: "2", author: "max", body: "body2" },
 ];
 
 function App() {
-  const [modalIsVisible, setModalIsVisible] = useState(null); // Track the post ID instead of boolean
-  const [postsInfo, setPostsInfo] = useState(POSTINFO);
+  const [posts, setPosts] = useState(INITIAL_POSTS);
+  const [editingPostId, setEditingPostId] = useState(null);
 
-  function hideModalHandler() {
-    setModalIsVisible(null); // Close the modal by setting it to null
-  }
-
-  const openModalHandler = (id) => {
-    setModalIsVisible(id); // Open the modal for the post with the given ID
+  const addPost = (newPost) => {
+    setPosts((prevPosts) => [...prevPosts, { ...newPost, id: Date.now().toString() }]);
   };
 
-  const onChangeBodyHandler = (id, body1) => {
-    setPostsInfo((prevPostsInfo) => {
-      const updatedPosts = prevPostsInfo.map((post) =>
-        post.id === id ? { ...post, body: body1 } : post
-      );
-      return updatedPosts;
-    });
+  const updatePost = (id, updates) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === id ? { ...post, ...updates } : post
+      )
+    );
   };
 
-  const onChangeNameHandler = (id, postName) => {
-    setPostsInfo((prevPostsInfo) => {
-      const updatedPosts = prevPostsInfo.map((post) =>
-        post.id === id ? { ...post, author: postName } : post
-      );
-      return updatedPosts;
-    });
-  };
+  const openEditModal = (id) => setEditingPostId(id);
+  const closeEditModal = () => setEditingPostId(null);
 
   return (
     <>
-      <MainHeader />
+      <MainHeader onAddPost={addPost} />
       <main>
+      <div id="modal"></div>
         <ListPosts
-          listposts={postsInfo}
-          onChangeNameHandler={onChangeNameHandler}
-          onChangeBodyHandler={onChangeBodyHandler}
-          onOpenModal={openModalHandler}
-          onCloseModal={hideModalHandler}
-          modalIsVisible={modalIsVisible} // Pass the ID of the open modal
+          posts={posts}
+          onUpdatePost={updatePost}
+          onOpenEditModal={openEditModal}
+          onCloseEditModal={closeEditModal}
+          editingPostId={editingPostId}
         />
       </main>
     </>

@@ -1,47 +1,43 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import classes from './NewPost.module.css';
 
-function NewPost(props) {
-  const [inputName, setInputName] = useState(props.name || '');
-  const [inputBody, setInputBody] = useState(props.body || '');
+function NewPost({ id, initialAuthor = '', initialBody = '', onSubmit, onClose }) {
+  const [author, setAuthor] = useState(initialAuthor);
+  const [body, setBody] = useState(initialBody);
 
-  const changeInfo = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    props.onChangeNameHandler(props.id,inputName);
-    props.onChangeBodyHandler(props.id,inputBody);
-
-    props.onClose();
+    onSubmit({ id, author, body });
   };
 
   return (
-    <form className={classes.form}>
+    <form className={classes.form} onSubmit={handleSubmit}>
       <p>
-        <label htmlFor={props.id}>Text</label>
+        <label htmlFor="body">Text</label>
         <textarea
-          onChange={(e) => setInputBody(e.target.value)} 
-          id={props.id}
+          id="body"
           required
           rows={3}
-          value={inputBody}  
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
         />
       </p>
       <p>
-        <label htmlFor={props.id}>Your name</label>
+        <label htmlFor="name">Your name</label>
         <input
-          value={inputName}  
-          onChange={(e) => setInputName(e.target.value)} 
           type="text"
-          id={props.id}
+          id="name"
           required
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
         />
       </p>
       <p className={classes.actions}>
-        <button type="button" onClick={props.onClose}>Cancel</button>
-        <button id={props.id} onClick={changeInfo}>Submit</button>
+        <button type="button" onClick={onClose}>Cancel</button>
+        <button type="submit">Submit</button>
       </p>
     </form>
   );
 }
-
 
 export default NewPost;

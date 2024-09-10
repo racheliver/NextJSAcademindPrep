@@ -1,13 +1,17 @@
-import classes from "./Modal.module.css";
 import React from "react";
+import ReactDOM from "react-dom";
+import classes from "./Modal.module.css";
 
-export const Modal = ({ children, onClose }) => {
-  return (
+const Modal = ({ children, onClose }) => {
+  return ReactDOM.createPortal(
     <>
       <div className={classes.backdrop} onClick={onClose}></div>
       <dialog open className={classes.modal}>
         {children}
       </dialog>
-    </>
+    </>,
+    document.getElementById("modal")
   );
 };
+
+export default Modal;

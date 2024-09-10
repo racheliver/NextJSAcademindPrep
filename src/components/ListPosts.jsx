@@ -1,44 +1,43 @@
+import React from "react";
 import Posts from "./Posts";
 import classes from "./PostsList.module.css";
 import NewPost from "./NewPost";
-import { Modal } from "./Modal";
+import Modal from "./Modal";
 import { MdPostAdd } from "react-icons/md";
 
-export const ListPosts = (props) => {
+export const ListPosts = ({ posts, onUpdatePost, onOpenEditModal, onCloseEditModal, editingPostId }) => {
   return (
-    <>
-      <ul className={classes.posts}>
-        {props.listposts && props.listposts.length > 0 ? (
-          props.listposts.map((post) => (
-            <li key={post.id}>
-              {/* Open modal only if the modalIsVisible matches the post's ID */}
-              {props.modalIsVisible === post.id && (
-                <Modal onClose={props.onCloseModal}>
-                  <NewPost
-                    id={post.id}
-                    onChangeNameHandler={props.onChangeNameHandler}
-                    onChangeBodyHandler={props.onChangeBodyHandler}
-                    onClose={props.onCloseModal}
-                  />
-                </Modal>
-              )}
-
-              <p>
-                <button
-                  className={classes.button}
-                  onClick={() => props.onOpenModal(post.id)}
-                >
-                  <MdPostAdd size={18} />
-                  New Post
-                </button>
-              </p>
-              <Posts author={post.author} body={post.body} id={post.id} />
-            </li>
-          ))
-        ) : (
-          <p>No posts available</p>
-        )}
-      </ul>
-    </>
+    <ul className={classes.posts}>
+      {posts.length > 0 ? (
+        posts.map((post) => (
+          <li key={post.id}>
+            {editingPostId === post.id && (
+              <Modal onClose={onCloseEditModal}>
+                <NewPost
+                  id={post.id}
+                  initialAuthor={post.author}
+                  initialBody={post.body}
+                  onSubmit={(updates) => {
+                    onUpdatePost(post.id, updates);
+                    onCloseEditModal();
+                  }}
+                  onClose={onCloseEditModal}
+                />
+              </Modal>
+            )}
+            <Posts {...post} />
+            <button
+              className={classes.button}
+              onClick={() => onOpenEditModal(post.id)}
+            >
+              <MdPostAdd size={18} />
+              Edit Post
+            </button>
+          </li>
+        ))
+      ) : (
+        <p>No posts available</p>
+      )}
+    </ul>
   );
 };
