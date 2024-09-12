@@ -7,11 +7,19 @@ const INITIAL_POSTS = [];
 function App() {
   const [posts, setPosts] = useState(INITIAL_POSTS);
   const [editingPostId, setEditingPostId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch("http://localhost:8080/posts");
-      const responseResult = await response.json();
-      setPosts(responseResult.posts);
+      try {
+        const response = await fetch("http://localhost:8080/posts");
+        const responseResult = await response.json();
+        setPosts(responseResult.posts);
+      } catch (error) {
+        console.error("Failed to fetch posts", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchPosts();
   }, []);
@@ -47,6 +55,7 @@ function App() {
           onOpenEditModal={openEditModal}
           onCloseEditModal={closeEditModal}
           editingPostId={editingPostId}
+          isLoading={isLoading}
         />
       </main>
     </>

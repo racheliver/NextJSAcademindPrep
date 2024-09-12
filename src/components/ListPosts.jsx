@@ -5,10 +5,10 @@ import NewPost from "./NewPost";
 import Modal from "./Modal";
 import { MdPostAdd } from "react-icons/md";
 
-export const ListPosts = ({ posts, onUpdatePost, onOpenEditModal, onCloseEditModal, editingPostId }) => {
+export const ListPosts = ({ posts, onUpdatePost, onOpenEditModal, onCloseEditModal, editingPostId, isLoading }) => {
   return (
     <ul className={classes.posts}>
-      {posts.length > 0 ? (
+      {!isLoading && posts.length > 0 && (
         posts.map((post) => (
           <li key={post.id}>
             {editingPostId === post.id && (
@@ -35,8 +35,12 @@ export const ListPosts = ({ posts, onUpdatePost, onOpenEditModal, onCloseEditMod
             </button>
           </li>
         ))
-      ) : (
+      ) } 
+      {!isLoading && posts.length < 0 && (
         <p>No posts available</p>
+      )}
+      {isLoading && (
+        <p>Loading...</p>
       )}
     </ul>
   );
