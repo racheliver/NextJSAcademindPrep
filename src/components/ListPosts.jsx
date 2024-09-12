@@ -5,9 +5,13 @@ import NewPost from "./NewPost";
 import Modal from "./Modal";
 import { MdPostAdd } from "react-icons/md";
 
-export const ListPosts = ({ posts, onUpdatePost, onOpenEditModal, onCloseEditModal, editingPostId, isLoading }) => {
+export const ListPosts = ({ posts, onUpdatePost, onOpenEditModal, onCloseEditModal, editingPostId, isLoading,error }) => {
   return (
     <ul className={classes.posts}>
+      {error && (
+        <p> There was an error when fetching data..</p>
+      )
+      }
       {!isLoading && posts.length > 0 && (
         posts.map((post) => (
           <li key={post.id}>
@@ -36,7 +40,7 @@ export const ListPosts = ({ posts, onUpdatePost, onOpenEditModal, onCloseEditMod
           </li>
         ))
       ) } 
-      {!isLoading && posts.length < 0 && (
+      {!isLoading && posts.length <= 0 && (
         <p>No posts available</p>
       )}
       {isLoading && (
